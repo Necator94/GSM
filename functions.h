@@ -7,7 +7,9 @@
 
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
+#include <string>
+using namespace std;
 
-int send(char*);
+string send(string);
 
 #endif /* FUNCTIONS_H_ */

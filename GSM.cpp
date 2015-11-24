@@ -5,7 +5,7 @@
 
 using namespace std;
 
-char* status="AT\n";
+string status="AT\n";
 //char* baudRate="AT"                        		//Every AT command starts with "AT", sync baudrade
 char* disableEcho="ATE1\n";					  		// Disable command line echo
 char* MsgTxtMode="AT+CMGF=1\n";                        // Set sms message command as text mode
@@ -19,7 +19,9 @@ char* text="kek suka pizda\x1A";
 int main(){
 
 
-//	send(status);
+
+	//send(status);
+
 	send(MsgTxtMode);
 	send(readMsg);
 	//send(sms);

@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include "serialib.h"
 #include "functions.h"
-#include <string>
-
-using namespace std;
 
 string status="AT\n";
 //char* baudRate="AT"                        		//Every AT command starts with "AT", sync baudrade
@@ -23,7 +20,8 @@ int main(){
 	//send(status);
 
 	send(MsgTxtMode);
-	send(readMsg);
+	string ans=send(readMsg);
+	cout<<ans<<endl;
 	//send(sms);
 	//send(text);
 

@@ -8,6 +8,10 @@
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 #include <string>
+#include <cstring>
+#include <vector>
+#include <string>
+#include <sstream>
 using namespace std;
 
 string send(string);

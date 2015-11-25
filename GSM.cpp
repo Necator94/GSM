@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include "serialib.h"
 #include "functions.h"
-
+#include <cstring>
+#include <vector>
+#include <string>
+#include <sstream>
 string status="AT\n";
 //char* baudRate="AT"                        		//Every AT command starts with "AT", sync baudrade
 char* disableEcho="ATE1\n";					  		// Disable command line echo
@@ -20,10 +23,27 @@ int main(){
 	//send(status);
 
 	send(MsgTxtMode);
-	string ans=send(readMsg);
-	cout<<ans<<endl;
+	string answ=send(readMsg);
+	cout<<answ<<endl;
 	//send(sms);
 	//send(text);
+
+    string buf; // Have a buffer string
+    stringstream ss(answ); // Insert the string into a stream
+    vector<string> tokens; // Create vector to hold our words
+    char b[20];
+    while (ss >> buf){
+       int i=0;
+    	tokens.push_back(buf);
+       b[i]=buf;
+       i++;
+cout<<b[i]<<endl;
+    }
+
+
+
+
+
 
 return 0;
 }

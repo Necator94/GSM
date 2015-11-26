@@ -61,31 +61,33 @@ return string();
 //*********************************end of separation
 bool FileExists(const char *fname)
 		 			{
-		 			  return std::ifstream(fname) != NULL;
+		 			  return ifstream(fname) != NULL;
 		 			}
 //***********************ADC enabling****************
- void adc_UART_enabling()
+ void ADC_UART_enabling()
 {
 	 const char *fnameADC="/sys/devices/ocp.3/helper.15";
-	 bool a=FileExists(fnameADC);
-	 if (a==0)
+	 const char *fnameUART="/dev/ttyO4";
+	 //bool a=;
+	// bool b=;
+	 if (FileExists(fnameADC)==0)
 	{
-	 cout<<a<<endl;
+		 string adcarg="cape-bone-iio";
+		 ofstream adc_on ("/sys/devices/bone_capemgr.9/slots");
+		 adc_on<<adcarg;
+		 adc_on.close();
+		 cout<<"ADC"<<endl;
 	}
-	 else {
-		 cout <<"kek"<<a<<endl;
+	 	 else if (FileExists(fnameUART)==0)
+		 {
+	 		string UARTarg="BB-UART4";
+	 		ofstream UART_on ("/sys/devices/bone_capemgr.9/slots");
+	 		UART_on<<UARTarg;
+	 		UART_on.close();
+	 		cout<<"UART"<<endl;
+		 }
+}
 
-	 }
-/*
-string adcarg="cape-bone-iio";
-ofstream adc_on ("/sys/devices/bone_capemgr.9/slots");
-adc_on<<adcarg;
-adc_on.close();
-*/
-/*string UARTarg="BB-UART4";
-ofstream UART_on ("/sys/devices/bone_capemgr.9/slots");
-UART_on<<UARTarg;
-UART_on.close();
-*/}
+
 //***************************************************
 

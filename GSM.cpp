@@ -15,7 +15,7 @@ char* text="kek suka pizda\x1A";
 
 int main(){
 
-	adc_UART_enabling();
+	ADC_UART_enabling();
 	//send(status);
 
 	send(MsgTxtMode);

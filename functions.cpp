@@ -38,5 +38,54 @@ string send(string command)
    LS.Close();															// Close the connection with the device
 return string();
 }
+//*********************************separation
+string fun(string *answ, string* w1, string* w2)
+{
+	 	string buf; 								// Have a buffer string
+	    stringstream ss(*answ); 						// Insert the string into a stream
+	    vector<string> tokens; 						// Create vector to hold our words
+	    //while (ss >> buf){
+	    ss>>buf;
+	    tokens.push_back(buf);
+	    *answ=buf;
+	    ss>>buf;
+	    tokens.push_back(buf);
+	    *w1=buf;
+	    ss>>buf;
+	    tokens.push_back(buf);
+	    *w2=buf;
+        //i++;
+	    //}
+return string();
+}
+//*********************************end of separation
+bool FileExists(const char *fname)
+		 			{
+		 			  return std::ifstream(fname) != NULL;
+		 			}
+//***********************ADC enabling****************
+ void adc_UART_enabling()
+{
+	 const char *fnameADC="/sys/devices/ocp.3/helper.15";
+	 bool a=FileExists(fnameADC);
+	 if (a==0)
+	{
+	 cout<<a<<endl;
+	}
+	 else {
+		 cout <<"kek"<<a<<endl;
 
+	 }
+/*
+string adcarg="cape-bone-iio";
+ofstream adc_on ("/sys/devices/bone_capemgr.9/slots");
+adc_on<<adcarg;
+adc_on.close();
+*/
+/*string UARTarg="BB-UART4";
+ofstream UART_on ("/sys/devices/bone_capemgr.9/slots");
+UART_on<<UARTarg;
+UART_on.close();
+*/}
+//***************************************************
 

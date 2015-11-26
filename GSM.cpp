@@ -2,7 +2,7 @@
 #include "serialib.h"
 #include "functions.h"
 
-string status="AT\n";
+
 //char* baudRate="AT"                        		//Every AT command starts with "AT", sync baudrade
 char* disableEcho="ATE1\n";					  		// Disable command line echo
 char* MsgTxtMode="AT+CMGF=1\n";                        // Set sms message command as text mode
@@ -15,35 +15,24 @@ char* text="kek suka pizda\x1A";
 
 int main(){
 
-
-
+	adc_UART_enabling();
 	//send(status);
 
 	send(MsgTxtMode);
 	string answ=send(readMsg);
-
-
-
+	string w1,w2;
+	string kek=fun(&answ,&w1,&w2);
+	cout << answ << endl;
+	cout << w1 << endl;
+	cout << w2 << endl;
 	//send(sms);
 	//send(text);
-//*********************************separation
-    string buf; 								// Have a buffer string
-    stringstream ss(answ); 						// Insert the string into a stream
-    vector<string> tokens; 						// Create vector to hold our words
-    string a[10];
-
-    int i=0;
-    while (ss >> buf){
-       tokens.push_back(buf);
-       a[i]=buf;
-              i++;
-    }
-
-    cout<<a[0]<<endl;
-    cout<<a[1]<<endl;
-    cout<<a[2]<<endl;
- //*********************************end of separation
    // send(deleteMessageByPosition);
+
+
+
+
+
 
 
 

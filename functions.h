@@ -12,8 +12,11 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fstream>
 using namespace std;
 
 string send(string);
-
+string fun(string*,string*,string*);
+void adc_UART_enabling();
+bool FileExists(const char*);
 #endif /* FUNCTIONS_H_ */

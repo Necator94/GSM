@@ -9,14 +9,20 @@
 #define FUNCTIONS_H_
 #include <string>
 #include <cstring>
+
 #include <vector>
-#include <string>
 #include <sstream>
+
 #include <fstream>
 using namespace std;
+
 
 string send(string);
 string fun(string*,string*,string*);
 void ADC_UART_enabling();
 bool FileExists(const char*);
+float T_ADC_reading();
+
+
+
 #endif /* FUNCTIONS_H_ */

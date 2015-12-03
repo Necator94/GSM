@@ -34,11 +34,11 @@ return string();
 }
 
 //******************************Splitting string******
-string fun(string *answ, string* w1, string* w2)
+string fun(string *answ, string* w1, string* w2, string* w3)
 {
 	 	string buf; 								// Have a buffer string
 	    stringstream ss(*answ); 						// Insert the string into a stream
-	    vector<string> tokens; 						// Create vector to hold our words
+	    vector <string> tokens; 						// Create vector to hold our words
 	    //while (ss >> buf)
 	    ss >> buf;
 	    tokens.push_back(buf);
@@ -49,6 +49,9 @@ string fun(string *answ, string* w1, string* w2)
 	    ss >> buf;
 	    tokens.push_back(buf);
 	    *w2 = buf;
+	    ss >> buf;
+	    tokens.push_back(buf);
+	    *w3 = buf;
         return string();
 }
 //***********************End of splitting************
@@ -79,11 +82,27 @@ bool FileExists(const char *fname)
 }
  //***********************End of ADC and UART enabling*********
  //***********************Reading and processing of ADC value**
- float T_ADC_reading()
- {
+float T_ADC_reading()
+{
 	 ifstream adc_val ("/sys/devices/ocp.3/helper.15/AIN0");
 	 float adc_value;
 	 adc_val >> adc_value;
-	 return adc_value;
- }
+	 float Rt = (0.8 * adc_value) / (1800 - adc_value);
+	 return Rt;
+}
+/*
+string T_conversionToString();
+{
+	stringstream strRt;
+	string strRt1;
+	strRt << Rt;
+	strRt >> strRt1;
+	string msg = "Current temperature is " + strRt1 + "\x1A";
+	return msg;
 
+
+
+
+
+
+} */

@@ -85,10 +85,21 @@ bool FileExists(const char *fname)
  //Reading and processing of ADC value to temperature
 double T_ADC_reading()
 {
-	 ifstream adc_val ("/sys/devices/ocp.3/helper.15/AIN0");
+	// ifstream adc_val1 ("/sys/devices/ocp.3/helper.15/AIN0");
+	 ifstream adc_val ("/sys/bus/iio/devices/iio\:device0/in_voltage0_raw");
 	 double adc_value;
 	 adc_val >> adc_value;
-	 double Rt = (0.8 * adc_value) / (1800 - adc_value);
-	 return Rt;
+
+
+
+	 adc_value = 1.8 / 4095 * adc_value;
+	// cout << adc_value << " - 4096" << endl;
+	 double Rt = (800 * adc_value) / (1.8 - adc_value);
+	 double T = (Rt - 1000) * 0.25;
+	// cout << T << " - 4096" << endl;
+
+
+
+	 return T;
 }
 

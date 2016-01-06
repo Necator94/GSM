@@ -18,7 +18,7 @@ int main()
 	//char* checkMessageStatus="AT+CMGL=\"ALL\"";   // Check status of received SMS
 	string k1 = "\"";
 	string bEnter = "\r";							// Symbols which are equivalent to pressing Enter button
-
+	cout << "Start of the program" << endl;
 	ADC_UART_enabling();							// Initialization of ADC and UART
 	send(deleteMessageByPosition);					// SMS deleting
 
@@ -78,6 +78,11 @@ int main()
 					}
 					// Log out from system
 					if ((answ == userName) && (w1 == "LO")){
+						string msg = "Exit from system have completed\x1A"; // String creation
+						send(telNumber);
+						sleep(1);
+						send(msg);			// Send warning message to user
+						sleep(1);
 						send(deleteMessageByPosition);
 						k1 = false;
 					}
@@ -146,13 +151,28 @@ int main()
 							}
 							//End of cycle without SMS deleting in case of new boundaries
 							if ((answ == userName) && (w1 == "T")){
-							k2 = false;
+								k2 = false;
 							}
-
 							//End of cycle
 							if ((answ == userName) && (w1 == "ET")){
-							send(deleteMessageByPosition);
-							k2 = false;
+								string msg = "Tracking mode have turned off\x1A"; // String creation
+								send(telNumber);
+								sleep(1);
+								send(msg);			// Send warning message to user
+								sleep(1);
+								send(deleteMessageByPosition);
+								k2 = false;
+							}
+							// Log out from system
+							if ((answ == userName) && (w1 == "LO")){
+								string msg = "Exit from system have completed\x1A"; // String creation
+								send(telNumber);
+								sleep(1);
+								send(msg);			// Send warning message to user
+								sleep(1);
+								send(deleteMessageByPosition);
+								k2 = false;
+								k1 = false;
 							}
 						}
 					}

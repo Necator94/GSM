@@ -89,14 +89,18 @@ bool FileExists(const char *fname)
 double T_ADC_reading()
 {
 	// ifstream adc_val1 ("/sys/devices/ocp.3/helper.15/AIN0");				// Path to file which contains value of ADC(0-1800)
-	 ifstream adc_val ("/sys/bus/iio/devices/iio\:device0/in_voltage0_raw"); // Path to file which contains value of ADC(0-4096)
-	 double adc_value;
-	 adc_val >> adc_value;								// Write ADC value to variable
-	 adc_value = 1.8 / 4095 * adc_value;				// Calculation
-	// cout << adc_value << " - 4096" << endl;
-	 double Rt = (800 * adc_value) / (1.8 - adc_value); // Calculation of resulted resistance
-	 double T = (Rt - 1000) * 0.25;						// Calculation of resulted temperature
-	// cout << T << " - 4096" << endl;
-	 return T;											// Return resulted temperature as argument
+	int n = 0;
+	double T = 0;
+	while (n < 1000){
+		ifstream adc_val ("/sys/bus/iio/devices/iio\:device0/in_voltage0_raw"); // Path to file which contains value of ADC(0-4096)
+		double adc_value;
+		adc_val >> adc_value;													// Write ADC value to variable
+		adc_value = 1.8 / 4095 * adc_value;										// Calculation
+		double Rt = (816 * adc_value) / (1.8 - adc_value); 				// Calculation of resulted resistance
+		T = T + (Rt - 1000) * 0.25;
+		n ++;
+	}
+	T = T / 1000;
+	return T;											// Return resulted temperature as argument
 }
 

@@ -12,7 +12,7 @@ int main()
 	//Every AT command starts with "AT", sync baud rate
 	string msgTxtMode="AT+CMGF=1\n";             	// Set SMS message command as text mode
 	string sms="AT+CMGS=\"+491748075141\"\r";		// Sending SMS to desired number
-	string readMsg="AT+CMGR=1\n";        			// Command for reading message from location 1 from inbox
+	string readMsg="AT+CMGR=3\n";        			// Command for reading message from location 1 from inbox
 	string deleteMessageByPosition="AT+CMGD=1\n";   // Erasing all wrote messages from inbox
 	string ctrlD="\x1A";							// Symbols which are equivalent to pressing Ctrl + D buttons
 	//char* checkMessageStatus="AT+CMGL=\"ALL\"";   // Check status of received SMS
@@ -20,20 +20,21 @@ int main()
 	string bEnter = "\r";							// Symbols which are equivalent to pressing Enter button
 	cout << "Start of the program" << endl;
 	ADC_UART_enabling();							// Initialization of ADC and UART
-	send(deleteMessageByPosition);					// SMS deleting
+	//send(deleteMessageByPosition);					// SMS deleting
 
 
 	while (true){
 
 		// Reading of SMS
 		send(msgTxtMode);							// Set text mode on GSM M95 click
-		string answ = send(readMsg);				// Reading SMS to string answ
-
+	//	string w1, w2, w3, w4, w5;
+		string w1, w2, w3, w4, w5 = send(readMsg);				// Reading SMS to string answ
+		//send(readMsg);
 		//	Splitting of SMS
-		string w1, w2, w3;							//Initialization of variables
-		fun(&answ, &w1, &w2, &w3);					// Split string on variables via fun function
-		cout << "msg content   "<< answ << w1 << w2 << endl;
-
+//		string w1, w2, w3;							//Initialization of variables
+//		splitstr(&answ, &w1, &w2, &w3);					// Split string with spaces on variables via fun function
+//		cout << "msg content   "<< w1 <<" " << w2 << " " << w3 << " " << w4 << " " << w5  << endl;
+		string answ = "qee";
 		// Initialization(log in) of user
 		if (answ=="L"){												// If first word of SMS is "L" ...
 			string userName = w1;									// Write second word(name of user) to string userName
@@ -52,7 +53,7 @@ int main()
 				send(msgTxtMode);
 				string answ = send(readMsg);
 				string w1, w2, w3;
-				fun(&answ, &w1, &w2, &w3);
+//				splitstr(&answ, &w1, &w2, &w3);
 
 					// Check status
 					if ((answ == userName) && (w1 == "status")){	// Chech SMS for "Username" and "status"
@@ -93,7 +94,7 @@ int main()
 						// Reading and splitting of SMS (described above)
 						send(msgTxtMode);
 						answ = send(readMsg);
-						fun(&answ, &w1, &w2, &w3);
+	//					splitstr(&answ, &w1, &w2, &w3);
 						//Conversion of strings with temperature range to double type
 						double tMin = atof(w2.c_str());		// Convert third word to tMin as double
 						double tMax = atof(w3.c_str());		// Convert fourth word to tMax as double
@@ -106,7 +107,7 @@ int main()
 							// Reading and splitting of SMS (described above)
 							send(msgTxtMode);
 							answ = send(readMsg);
-							fun(&answ, &w1, &w2, &w3);
+	//						splitstr(&answ, &w1, &w2, &w3);
 							cout << "msg content   "<< answ << w1 << w2 << endl;
 
 

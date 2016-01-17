@@ -2,7 +2,8 @@
 #include <iostream>
 #include "serialib.h"
 #include "functions.h"
-
+#include <stdlib.h>
+#include <iostream>
 
 #define DEVICE_PORT "/dev/ttyO4" 	// Path to serial port on BeagleBone Black
 
@@ -17,27 +18,54 @@ string send(string command)
 		Ret = LS.WriteString(comm);         // Send the command on the serial port
 		string chek_reading_a(comm);		// Conversion read value to string type
 
-		string chek_reading_b = "AT+CMGR=1\n";  		// Reading SMS string for next condition
+		string chek_reading_b = "AT+CMGR=3\n";  		// Reading SMS string for next condition
+		cout << "stratsss" << endl;
+		sleep(1);
 		if (chek_reading_a == chek_reading_b){  		// Check for command on presence of reading sms command
 			// Read a maximum of 128 characters with a timeout of 5 seconds
 			// The final character of the string must be a line feed ('\n')
-			Ret = LS.ReadString(Buffer,'\n',128,5000);	// Read first string from GSM module answer (send command)
-			Ret = LS.ReadString(Buffer,'\n',128,5000);	// Read second string from GSM module answer (GSM answer)
-			Ret = LS.ReadString(Buffer,'\n',128,5000);	// Read third string from GSM module answer (SMS text)
-			string str(Buffer);							// Write string to buffer
-			return str;									// Return buffer as argument
-		} else {  // This condition used for debugging
-			Ret = LS.ReadString(Buffer,'\n',128,5000);
-			Ret = LS.ReadString(Buffer,'\n',128,5000);	// Read an answer of GSM module
-			string str1(Buffer);
-			return str1;
-		}
-   LS.Close();											// Close the connection with the device
-return string();
-}
+			int i = 0;
+			string smsLineArray[3];
+			cout << "inside" << endl;
+			while (i < 3) {
+				Ret = LS.ReadString(Buffer,'\n',128,5000);	// Read first string from GSM module answer (sent command)
+				sleep(0.1);
+				string buf(Buffer);
+				smsLineArray[i] = buf;
+				i++;
+			}
+			cout << smsLineArray[1] << endl;
 
+			istringstream ss(smsLineArray[1]);
+			string token;
+			i = 0;
+			string strContent1[4];
+			while(getline(ss, token, ',')) {
+			    strContent1[i] = token;
+
+			    i++;
+			}
+			cout << smsLineArray[2] << endl;
+			istringstream ss1(smsLineArray[2]);
+			string token1;
+			i = 0;
+			string strContent2[8];
+			while(getline(ss1, token1, ' ')) {
+				strContent2[i] = token1;
+
+			    i++;
+			    cout << strContent2[i] << "intokens" << endl;
+			}
+
+
+		return strContent2[0], strContent2[1], strContent2[2], strContent2[3], strContent1[1];
+	}
+   LS.Close();											// Close the connection with the device
+   return string();
+}
+/*
 //Splitting of strings on words
-string fun(string *answ, string* w1, string* w2, string* w3)
+string splitstr(string *answ, string* w1, string* w2, string* w3)
 {
 	 	string buf; 					// Have a buffer string
 	    stringstream ss(*answ); 		// Insert the string into a stream
@@ -57,7 +85,7 @@ string fun(string *answ, string* w1, string* w2, string* w3)
 	    *w3 = buf;						// Write fourth word to *w3
         return string();
 }
-
+*/
 //Check on existence of file (uses for checking ADC and UART)
 bool FileExists(const char *fname)
 		{

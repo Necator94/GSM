@@ -1,91 +1,68 @@
-#include <stdio.h>
-#include <iostream>
-#include "serialib.h"
 #include "functions.h"
-#include <stdlib.h>
-#include <iostream>
 
 #define DEVICE_PORT "/dev/ttyO4" 	// Path to serial port on BeagleBone Black
 
 //Sending commands to device
-string send(string command)
+string * send(string command)
 {
+	sleep(2);
 	serialib LS;
+		//cout << "inside of function" << endl;
 		const char * comm = command.c_str();//conversion of input argument to char * type which is nessecary for seriallib
 		int Ret;
 		char Buffer[128];					// Define size of buffer (amount of symbols in SMS)
 		Ret = LS.Open(DEVICE_PORT, 9600);   // Open serial link at 9600 bauds
 		Ret = LS.WriteString(comm);         // Send the command on the serial port
-		string chek_reading_a(comm);		// Conversion read value to string type
-
-		string chek_reading_b = "AT+CMGR=3\n";  		// Reading SMS string for next condition
-		cout << "stratsss" << endl;
-		sleep(1);
-		if (chek_reading_a == chek_reading_b){  		// Check for command on presence of reading sms command
+		string chek_reading(comm);		// Conversion read value to string type
+		cout << chek_reading << "  - recieved command" << endl;
+		if (chek_reading == "AT+CMGR=1\n"){  		// Check for command on presence of reading sms command
+			cout << "  - inside of condition" << endl;
 			// Read a maximum of 128 characters with a timeout of 5 seconds
 			// The final character of the string must be a line feed ('\n')
 			int i = 0;
 			string smsLineArray[3];
-			cout << "inside" << endl;
 			while (i < 3) {
 				Ret = LS.ReadString(Buffer,'\n',128,5000);	// Read first string from GSM module answer (sent command)
-				sleep(0.1);
+				cout << Buffer << "    - buffer" << endl;
 				string buf(Buffer);
 				smsLineArray[i] = buf;
 				i++;
 			}
-			cout << smsLineArray[1] << endl;
-
-			istringstream ss(smsLineArray[1]);
-			string token;
+			stringstream ss;
+			ss << smsLineArray[1];
+			string token, strContent1[4];
 			i = 0;
-			string strContent1[4];
-			while(getline(ss, token, ',')) {
+				while(getline(ss, token, ',')) {
 			    strContent1[i] = token;
-
 			    i++;
 			}
-			cout << smsLineArray[2] << endl;
-			istringstream ss1(smsLineArray[2]);
-			string token1;
+			ss.clear();
+			ss << smsLineArray[2];
 			i = 0;
 			string strContent2[8];
-			while(getline(ss1, token1, ' ')) {
-				strContent2[i] = token1;
-
+			while(getline(ss, token, ' ')) {
+				strContent2[i] = token;
 			    i++;
-			    cout << strContent2[i] << "intokens" << endl;
 			}
+			string* retArray = new string[5];
+			i = 0;
+			while (i < 4){
+				retArray[i] = strContent2[i];
+				cout << retArray[i] << " - splitted"<< endl;;
+				i++;
+			}
+			retArray[4] = strContent1[1];
+			cout << retArray[4] << " - splitted"<< endl;
+			sleep(2);
+			LS.Close();
+			return retArray;
 
+		}
+	sleep(2);
+	LS.Close();				// Close the connection with the device
+	return 0;
+}
 
-		return strContent2[0], strContent2[1], strContent2[2], strContent2[3], strContent1[1];
-	}
-   LS.Close();											// Close the connection with the device
-   return string();
-}
-/*
-//Splitting of strings on words
-string splitstr(string *answ, string* w1, string* w2, string* w3)
-{
-	 	string buf; 					// Have a buffer string
-	    stringstream ss(*answ); 		// Insert the string into a stream
-	    vector <string> tokens; 		// Create vector to hold our words
-	    //while (ss >> buf)
-	    ss >> buf;
-	    tokens.push_back(buf);
-	    *answ = buf;					// Write first word to *answ
-	    ss >> buf;
-	    tokens.push_back(buf);
-	    *w1 = buf;						// Write second word to *w1
-	    ss >> buf;
-	    tokens.push_back(buf);
-	    *w2 = buf;						// Write third word to *w2
-	    ss >> buf;
-	    tokens.push_back(buf);
-	    *w3 = buf;						// Write fourth word to *w3
-        return string();
-}
-*/
 //Check on existence of file (uses for checking ADC and UART)
 bool FileExists(const char *fname)
 		{
@@ -130,5 +107,12 @@ double T_ADC_reading()
 	}
 	T = T / 1000;
 	return T;											// Return resulted temperature as argument
+}
+
+string convTtoMsg(double T){
+	ostringstream strs;
+	strs << T;
+	string strT = strs.str();
+	return strT;
 }
 

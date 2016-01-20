@@ -15,57 +15,76 @@ int main()
 	string msgFail = "Command incorrect!\x1A";						 // String creation
 	string confirm = "Login accepted!\x1A";					// Text of string that will send
 	double T;
-	string strT, telNumber, msg, word1, word2, word3, word4, userName;
-
+	string strT, telNumber, msg, word1, word2, word3, word4, userName, word1check, *recvarray;
+	bool ncheck = false;
 	ADC_UART_enabling();							// Initialization of ADC and UART
 	send(msgTxtMode);							// Set text mode on GSM M95 click
 	send(deleteMessageByPosition);					// SMS deleting
 
 	while (true) {
-
+		ncheck = false;
 		// Reading of SMS
-		string *recvarray;
 		recvarray = send(readMsg);					// Reading SMS to string answ
 		word1 = *(recvarray+0);
+		sleep(1);
+		recvarray = send(readMsg);					// Reading SMS to string answ
+		word1check = *(recvarray+0);
+
+		if (word1check == word1) {
+			ncheck = true;
+		}
 		int lenOfMsg1 = strlen(word1.c_str());
 		cout << *(recvarray) <<*(recvarray+1) <<*(recvarray+4) << endl;
 
-	/*	if ((lenOfMsg1 != 0) && (*(recvarray+0) != "L")) {
-			string telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write telephone number to string telNumber
+		if ((lenOfMsg1 != 0) && (*(recvarray+0) != "L") && (ncheck = true))  {
+			telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write telephone number to string telNumber
 			cout << telNumber << "inside kek" << endl;
-			//send(telNumber);
-			//send(msgFail);											// Send warning message to user
+			send(telNumber);
+			send(msgFail);											// Send warning message to user
 			send(deleteMessageByPosition);
-		}*/
+		}
 		cout << *(recvarray) <<*(recvarray+1) <<*(recvarray+4) << endl;
 		// Initialization(log in) of user
 		if (*(recvarray+0)=="L"){												// If first word of SMS is "L" ...
+			send(deleteMessageByPosition);
 			userName = *(recvarray+1);									// Write second word(name of user) to string userName
 			telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write third word(telephone number) to string telNumber
-
-			//send(telNumber);										// Enter of telephone number to GSM module
+			int lenO = strlen(userName.c_str());
+			cout << lenO << " length of -" << userName << endl;
+			send(telNumber);										// Enter of telephone number to GSM module
 			cout << "Login accepted!" << endl;
-			//send(confirm);											// Send string which contains SMS with text of login confirmation
-			send(deleteMessageByPosition);
+			send(confirm);											// Send string which contains SMS with text of login confirmation
+
 			// Working cycle of program which includes modes
 			bool k1 = true;
 			while (k1 == true){
-
+				ncheck = false;
 				recvarray = send(readMsg);
 				word1 = *(recvarray+0);
+				sleep(2);
+				recvarray = send(readMsg);					// Reading SMS to string answ
+				word1check = *(recvarray+0);
 				int lenOfMsg = strlen(word1.c_str());
+				int lenO = strlen(userName.c_str());
+				;
 				cout << *(recvarray+0) << "==" << userName << endl;
-				cout << lenOfMsg << "==" << "0" << endl;
-			/*	if ((*(recvarray+0) != userName) && (lenOfMsg != 0))  {
-							telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write telephone number to string telNumber
-							cout << telNumber << endl;
-							//send(telNumber);
-							//send(msgFail);											// Send warning message to user
-							cout << "message sent" << endl;
-							send(deleteMessageByPosition);
-				}*/
+				cout << lenOfMsg << "!=" << "0" << endl;
+				cout << lenO << "user length" << endl;
+				if (word1check == word1) {
+					ncheck = true;
+				}
+				if ((*(recvarray+0) != userName) && (lenOfMsg != 0) && (ncheck = true))  {
+					telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write telephone number to string telNumber
+					cout << telNumber << endl;
+					send(telNumber);
+					send(msgFail);											// Send warning message to user
+					cout << "message sent" << endl;
+					send(deleteMessageByPosition);
+				}
 
-					// Check status
+
+
+				// Check status
 					if ((*(recvarray+0) == userName) && (*(recvarray+1) == "status")){	// Chech SMS for "Username" and "status"
 						send(deleteMessageByPosition);				// Clear message buffer
 						T = T_ADC_reading();					// Reading of ADC value via function
@@ -103,7 +122,7 @@ int main()
 
 
 						while (k2 == true){
-
+							ncheck = false;
 							// Reading and splitting of SMS (described above)
 							send(msgTxtMode);
 							recvarray = send(readMsg);
@@ -111,13 +130,13 @@ int main()
 							cout << T << " - Current T" << endl;
 							// Check on temperature conformity condition
 							word1 = *(recvarray+0);
+							sleep(2);
+							recvarray = send(readMsg);					// Reading SMS to string answ
+							word1check = *(recvarray+0);
 							int lenOfMsg = strlen(word1.c_str());
-						/*	if ((*(recvarray+0) != userName) && (lenOfMsg != 0))  {
-								telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write telephone number to string telNumber
-								send(telNumber);
-								send(msgFail);											// Send warning message to user
-								send(deleteMessageByPosition);
-												}*/
+							if (word1check == word1) {
+							ncheck = true;
+							}
 							if ((T < tMin) || (T > tMax)){
 								send(deleteMessageByPosition);
 								// Temperature conversion from double to string (described above)
@@ -160,7 +179,12 @@ int main()
 								msg = "Exit from system have completed\x1A"; // String creation
 								send(telNumber);
 								send(msg);			// Send warning message to user
-
+							if ((*(recvarray+0) != userName) && (lenOfMsg != 0) && (ncheck = true))  {
+								telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;	// Write telephone number to string telNumber
+								send(telNumber);
+								send(msgFail);											// Send warning message to user
+								send(deleteMessageByPosition);
+																				}
 								k2 = false;
 								k1 = false;
 							}

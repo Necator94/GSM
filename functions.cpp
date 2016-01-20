@@ -5,7 +5,7 @@
 //Sending commands to device
 string * send(string command)
 {
-	sleep(2);
+	sleep(1);
 	serialib LS;
 		//cout << "inside of function" << endl;
 		const char * comm = command.c_str();//conversion of input argument to char * type which is nessecary for seriallib
@@ -28,7 +28,22 @@ string * send(string command)
 				smsLineArray[i] = buf;
 				i++;
 			}
-			stringstream ss;
+			string strContent2[8];
+			string buf; 					// Have a buffer string
+			stringstream ss(smsLineArray[2]); 		// Insert the string into a stream
+			vector <string> tokens; 		// Create vector to hold our words
+			i = 0;
+			while (i < 5){
+				ss >>  buf;
+				tokens.push_back(buf);
+				strContent2[i] = buf;					// Write first word to *answ
+				int lenO = strlen(strContent2[i].c_str());
+				cout << lenO << "  -length in function " << strContent2[i] << endl;
+				i++;
+			}
+
+			ss.clear();
+			//stringstream ss;
 			ss << smsLineArray[1];
 			string token, strContent1[4];
 			i = 0;
@@ -36,7 +51,7 @@ string * send(string command)
 			    strContent1[i] = token;
 			    i++;
 			}
-			ss.clear();
+			/*ss.clear();
 			ss << smsLineArray[2];
 			i = 0;
 			string strContent2[8];
@@ -44,21 +59,34 @@ string * send(string command)
 				strContent2[i] = token;
 			    i++;
 			}
+			*/
 			string* retArray = new string[5];
 			i = 0;
 			while (i < 4){
 				retArray[i] = strContent2[i];
-				cout << retArray[i] << " - splitted"<< endl;;
+				//cout << retArray[i] << " - splitted"<< endl;;
 				i++;
 			}
 			retArray[4] = strContent1[1];
-			cout << retArray[4] << " - splitted"<< endl;
-			sleep(2);
+			//cout << retArray[4] << " - splitted"<< endl;
+			lenO = strlen(retArray[1].c_str());
+			cout << lenO << "  -length in function " << retArray[1] << endl;
+			cout << retArray[1] << endl;
+			sleep(1);
 			LS.Close();
 			return retArray;
 
+
+
+
+
+
+
+
+
+
 		}
-	sleep(2);
+	sleep(1);
 	LS.Close();				// Close the connection with the device
 	return 0;
 }

@@ -41,9 +41,7 @@ string * send(string command)
 				cout << lenO << "  -length in function " << strContent2[i] << endl;
 				i++;
 			}
-
 			ss.clear();
-			//stringstream ss;
 			ss << smsLineArray[1];
 			string token, strContent1[4];
 			i = 0;
@@ -51,40 +49,18 @@ string * send(string command)
 			    strContent1[i] = token;
 			    i++;
 			}
-			/*ss.clear();
-			ss << smsLineArray[2];
-			i = 0;
-			string strContent2[8];
-			while(getline(ss, token, ' ')) {
-				strContent2[i] = token;
-			    i++;
-			}
-			*/
 			string* retArray = new string[5];
 			i = 0;
 			while (i < 4){
 				retArray[i] = strContent2[i];
-				//cout << retArray[i] << " - splitted"<< endl;;
 				i++;
 			}
 			retArray[4] = strContent1[1];
-			//cout << retArray[4] << " - splitted"<< endl;
-			lenO = strlen(retArray[1].c_str());
-			cout << lenO << "  -length in function " << retArray[1] << endl;
-			cout << retArray[1] << endl;
+			int len1 = strlen(retArray[4].c_str());
+			cout << len1 << "  -length in function " << retArray[4] << endl;
 			sleep(1);
 			LS.Close();
 			return retArray;
-
-
-
-
-
-
-
-
-
-
 		}
 	sleep(1);
 	LS.Close();				// Close the connection with the device
@@ -134,6 +110,7 @@ double T_ADC_reading()
 		n ++;
 	}
 	T = T / 1000;
+	T = round (T, 2);
 	return T;											// Return resulted temperature as argument
 }
 
@@ -142,5 +119,26 @@ string convTtoMsg(double T){
 	strs << T;
 	string strT = strs.str();
 	return strT;
+}
+
+
+
+double round(double x, int prec)
+{
+double power = 1.0;
+int i;
+if (prec > 0)
+for (i = 0; i < prec; i++)
+power *= 10.0;
+else if (prec < 0)
+for (i = 0; i < prec; i++)
+power /= 10.0;
+if (x > 0)
+x = floor(x * power + 0.5) / power;
+else if (x < 0)
+x = ceil(x * power - 0.5) / power;
+if (x == -0)
+x = 0;
+return x;
 }
 

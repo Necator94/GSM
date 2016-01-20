@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "unistd.h"
+#include <cmath>
 using namespace std;
 
 
@@ -27,4 +28,5 @@ void ADC_UART_enabling();								// Function for enabling of ADC and UART port
 bool FileExists(const char*);							// Function for checking on existence of files
 double T_ADC_reading();									// Function for reading of ADC value
 string convTtoMsg(double);
+double round(double, int);
 #endif /* FUNCTIONS_H_ */

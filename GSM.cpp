@@ -23,6 +23,20 @@ int main()
 	send(msgTxtMode);										// Set text mode on GSM M95 click
 	send(deleteMessageByPosition);							// SMS deleting
 
+	int counter0 = 0;
+	string gpioArg = "48";									// Number of GPIO for Enabling
+	ofstream adc_on0 ("/sys/class/gpio/export");			// Opening of GPIO export file
+	adc_on0 << gpioArg;										// Write command to file
+	adc_on0.close();										// Close file
+	gpioArg = "out";										// direction for GPIO port
+	ofstream adc_on1 ("/sys/class/gpio/gpio48/direction");	// Opening of GPIO direction file
+	adc_on1 << gpioArg;										// Write command to file
+	adc_on1.close();	 									// Close file
+	gpioArg = "1";											// High level of voltage on GPIO pin
+	ofstream adc_on2 ("/sys/class/gpio/gpio48/value");		// Opening of GPIO value file
+	adc_on2 << gpioArg;										// Write command to file
+	adc_on2.close();
+
 	while (true) {
 		ncheck = false;										// Set flag (true value means correct receiving and reading of SMS string)
 		// Reading of SMS
@@ -82,7 +96,8 @@ int main()
 				if (word1check == word1) {
 					ncheck = true;
 				}
-				if ((*(recvarray+0) != userName) && (lenOfString != 0) && (ncheck = true))  {
+				if ((*(recvarray+0) != userName) && (lenOfString != 0) && (ncheck = true) ||
+				   ((*(recvarray+1) != "T") && (*(recvarray+1) != "status") && (*(recvarray+1) != "LO")) && (lenOfString != 0) && (ncheck = true))  {
 					sleep (1);
 					send(deleteMessageByPosition);
 					telNumber = "AT+CMGS=" + *(recvarray+4) + bEnter;
@@ -158,6 +173,23 @@ int main()
 						if (word1check == word1) {
 						ncheck = true;
 						}
+
+						if (T > 50){
+							gpioArg = "0";											// Low level of voltage on GPIO pin
+							ofstream adc_on3 ("/sys/class/gpio/gpio48/value");		// Opening of GPIO value file
+							adc_on3 << gpioArg;										// Write command to file
+							adc_on3.close();
+							sleep(30);
+							gpioArg = "1";											// High level of voltage on GPIO pin
+							ofstream adc_on4 ("/sys/class/gpio/gpio48/value");		// Opening of GPIO value file
+							adc_on4 << gpioArg;										// Write command to file
+							adc_on4.close();
+							counter0 ++;
+							if (counter0 > 4) {
+								system ("init0");
+							}
+						}
+
 						// Check on temperature conformity condition
 						if ((T < tMin) || (T > tMax)){
 							sleep(1);
@@ -219,7 +251,8 @@ int main()
 							k2 = false;
 							k1 = false;
 						}
-						if ((*(recvarray+0) != userName) && (lenOfString != 0) && (ncheck = true))  {
+						if ((*(recvarray+0) != userName) && (lenOfString != 0) && (ncheck = true) ||
+							((*(recvarray+1) != "T") && (*(recvarray+1) != "status") && (*(recvarray+1) != "LO") && (*(recvarray+1) != "ET")) && (lenOfString != 0) && (ncheck = true)){
 							sleep(1);
 							send(deleteMessageByPosition);
 							sleep(1);

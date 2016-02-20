@@ -13,7 +13,7 @@ string * send(string command)
 		char Buffer[128];					// Define size of buffer (amount of symbols in SMS)
 		Ret = LS.Open(DEVICE_PORT, 9600);   // Open serial link at 9600 bauds
 		Ret = LS.WriteString(comm);         // Send the command on the serial port
-		string chek_reading(comm);		// Conversion read value to string type
+		string chek_reading(comm);			// Conversion read value to string type
 		cout << chek_reading << "  - recieved command" << endl;
 		if (chek_reading == "AT+CMGR=1\n"){  		// Check for command on presence of reading sms command
 			cout << "  - inside of condition" << endl;
@@ -29,9 +29,9 @@ string * send(string command)
 				i++;
 			}
 			string strContent2[8];
-			string buf; 					// Have a buffer string
+			string buf; 							// Have a buffer string
 			stringstream ss(smsLineArray[2]); 		// Insert the string into a stream
-			vector <string> tokens; 		// Create vector to hold our words
+			vector <string> tokens; 				// Create vector to hold our words
 			i = 0;
 			while (i < 5){
 				ss >>  buf;
@@ -105,13 +105,13 @@ double T_ADC_reading()
 		double adc_value;
 		adc_val >> adc_value;													// Write ADC value to variable
 		adc_value = 1.8 / 4095 * adc_value;										// Calculation
-		double Rt = (816 * adc_value) / (1.8 - adc_value); 				// Calculation of resulted resistance
+		double Rt = (816 * adc_value) / (1.8 - adc_value); 						// Calculation of resulted resistance
 		T = T + (Rt - 1000) * 0.25;
 		n ++;
 	}
 	T = T / 1000;
 	T = round (T, 2);
-	return T;											// Return resulted temperature as argument
+	return T;																	// Return resulted temperature as argument
 }
 
 string convTtoMsg(double T){
